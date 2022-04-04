@@ -1,3 +1,4 @@
+import { getAuth, onAuthStateChanged, User } from "firebase/auth"
 import {
   addDoc,
   collection,
@@ -17,6 +18,7 @@ import {
 } from "react"
 import { db } from "../services/firebase"
 import styles from "./Admin.module.scss"
+import LoginWithGoogleButton from "./LoginWithGoogleButton"
 interface ToDo {
   _ref: DocumentReference<DocumentData>
   done: boolean
@@ -24,8 +26,26 @@ interface ToDo {
 }
 
 const Admin: FunctionComponent = () => {
-  // TODO: Add Auth and use real User-Id instead
-  const userId = "dummyUser"
+  // AUTH
+  const auth = getAuth()
+  const [user, setUser] = useState<User | null>(null)
+  useEffect(() => {
+    console.log("effecting")
+    onAuthStateChanged(auth, (user) => {
+      setUser(user)
+      if (user) {
+        setDoc(
+          doc(db, `users/${user.uid}`),
+          { userName: user.displayName },
+          { merge: true }
+        )
+      }
+    })
+  }, [auth])
+
+  const userId = user?.uid
+
+  // FIRESTORE ToDos
 
   const [toDos, setToDos] = useState<ToDo[]>([])
 
@@ -47,6 +67,8 @@ const Admin: FunctionComponent = () => {
     return unsubscribe
   }, [toDosRef])
 
+  // TODO Methods
+
   const toggleToDo = (id: string) => {
     const affectedToDo = toDos.find((toDo) => toDo._ref.id === id)
     affectedToDo && updateDoc(affectedToDo._ref, { done: !affectedToDo.done })
@@ -62,7 +84,7 @@ const Admin: FunctionComponent = () => {
     createNewToDo(newToDo)
   }
 
-  if (!userId) return <div>Log In</div>
+  if (!userId) return <LoginWithGoogleButton />
 
   return (
     <div>
