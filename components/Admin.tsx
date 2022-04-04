@@ -1,7 +1,24 @@
-import { FormEvent, FunctionComponent, useState } from "react"
+import {
+  addDoc,
+  collection,
+  doc,
+  DocumentData,
+  DocumentReference,
+  onSnapshot,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore"
+import {
+  FormEvent,
+  FunctionComponent,
+  useEffect,
+  useMemo,
+  useState,
+} from "react"
+import { db } from "../services/firebase"
 import styles from "./Admin.module.scss"
 interface ToDo {
-  id: string
+  _ref: DocumentReference<DocumentData>
   done: boolean
   name: string
 }
@@ -10,24 +27,36 @@ const Admin: FunctionComponent = () => {
   // TODO: Add Auth and use real User-Id instead
   const userId = "dummyUser"
 
-  // TODO: Load all Todos from Firestore
-  const toDos: Array<ToDo> = [
-    { id: "123", done: true, name: "Setup Next App" },
-    { id: "123", done: true, name: "Create Component Styles" },
-    { id: "123", done: false, name: "Init Firebase in Project" },
-    { id: "abc", done: false, name: "Connect Auth" },
-    { id: "def", done: false, name: "Connect Firestore" },
-    { id: "dfg", done: false, name: "Create Firestore Rules" },
-    { id: "dfg", done: false, name: "Show open Tasks to Public" },
-  ]
+  const [toDos, setToDos] = useState<ToDo[]>([])
+
+  const toDosRef = useMemo(
+    () => (userId ? collection(db, `users/${userId}/toDos`) : undefined),
+    [userId]
+  )
+
+  useEffect(() => {
+    if (!toDosRef) return
+    const unsubscribe = onSnapshot(toDosRef, async (snapshot) => {
+      const docs = await snapshot.docs.map((doc) => ({
+        _ref: doc.ref,
+        done: doc.data().done,
+        name: doc.data().name,
+      }))
+      setToDos(docs)
+    })
+    return unsubscribe
+  }, [toDosRef])
 
   const toggleToDo = (id: string) => {
-    alert(id)
+    const affectedToDo = toDos.find((toDo) => toDo._ref.id === id)
+    affectedToDo && updateDoc(affectedToDo._ref, { done: !affectedToDo.done })
   }
   const createNewToDo = (name: string) => {
-    alert(name)
+    toDosRef && addDoc(toDosRef, { name, done: false })
   }
+
   const [newToDo, setNewToDo] = useState("")
+
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createNewToDo(newToDo)
@@ -45,9 +74,11 @@ const Admin: FunctionComponent = () => {
           <li
             data-done={todo.done ? "true" : "false"}
             className={styles.toDo}
-            key={todo.id}
+            key={todo._ref.id}
           >
-            <button onClick={() => toggleToDo(todo.id)}>{todo.name}</button>
+            <button onClick={() => toggleToDo(todo._ref.id)}>
+              {todo.name}
+            </button>
           </li>
         ))}
       </ul>
