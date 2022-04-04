@@ -1,4 +1,6 @@
-import { FunctionComponent } from "react"
+import { collection, onSnapshot } from "firebase/firestore"
+import { FunctionComponent, useEffect, useState } from "react"
+import { db } from "../services/firebase"
 import styles from "./Public.module.scss"
 
 interface User {
@@ -8,11 +10,22 @@ interface User {
 }
 
 const Public: FunctionComponent = () => {
-  const users: Array<User> = [
-    { userName: "fabian@loggify.app", countDone: 5, countTotal: 10 },
-    { userName: "john@doe.com", countDone: 1, countTotal: 8 },
-    { userName: "Jane@miller.com", countDone: 0, countTotal: 15 },
-  ]
+  const [users, setUsers] = useState<User[]>([])
+  useEffect(() => {
+    const unsubscribe = onSnapshot(
+      collection(db, "users"),
+      async (snapshot) => {
+        const docs = await snapshot.docs.map((doc) => ({
+          userName: doc.data().userName,
+          countDone: doc.data().countDone ?? 999,
+          countTotal: doc.data().countTotal ?? 999,
+        }))
+        console.log(docs)
+        setUsers(docs)
+      }
+    )
+    return unsubscribe
+  }, [])
 
   return (
     <div>

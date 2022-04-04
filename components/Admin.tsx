@@ -36,8 +36,8 @@ const Admin: FunctionComponent = () => {
 
   useEffect(() => {
     if (!toDosRef) return
-    const unsubscribe = onSnapshot(toDosRef, async (snapshot) => {
-      const docs = await snapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(toDosRef, (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({
         _ref: doc.ref,
         done: doc.data().done,
         name: doc.data().name,
