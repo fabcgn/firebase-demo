@@ -2,8 +2,8 @@ import type { NextPage } from "next"
 import Head from "next/head"
 import Image from "next/image"
 import styles from "../styles/Home.module.css"
-import Admin from "./components/Admin"
-import Public from "./components/Public"
+import Admin from "../components/Admin"
+import Public from "../components/Public"
 
 const Home: NextPage = () => {
   return (
