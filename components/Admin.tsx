@@ -89,7 +89,7 @@ const Admin: FunctionComponent = () => {
   return (
     <div>
       <h3>
-        To-Dos for <i>{userId}</i>
+        To-Dos for <i>{user.displayName}</i>
       </h3>
       <ul className={styles.toDoList}>
         {toDos.map((todo) => (
