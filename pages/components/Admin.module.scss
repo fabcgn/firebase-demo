@@ -1,0 +1,76 @@
+.toDoList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+.toDo {
+  display: flex;
+  margin: 0;
+}
+
+.toDo button,
+.newToDo {
+  border: none;
+  font-size: 1.3rem;
+  cursor: pointer;
+  background-color: transparent;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+.toDo button:hover {
+  transform: scale(1.025);
+}
+.toDo button::before {
+  content: "";
+}
+
+.toDo[data-done="true"] button::before {
+  content: "\2713";
+}
+
+.newToDo {
+  margin-top: 1rem;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+}
+
+.newToDo label::before {
+  content: "+";
+}
+
+.toDo button::before,
+.newToDo label::before {
+  margin-right: 1rem;
+  border: 2px solid currentColor;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+}
+
+.newToDo input {
+  border: 2px solid currentColor;
+  height: calc(2rem + 4px);
+  display: flex;
+  border-radius: 0.25rem;
+}
+.newToDo button {
+  border: 2px solid #f2830d;
+  height: calc(2rem + 4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  background: #f2830d;
+  color: white;
+  margin-left: 1rem;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+.newToDo button:disabled {
+  opacity: 0.5;
+}

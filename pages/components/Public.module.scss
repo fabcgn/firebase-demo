@@ -1,0 +1,17 @@
+.userList {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  padding: 0;
+}
+.userList li {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 1rem;
+  border-radius: 0.25rem;
+}
+.userList li:nth-child(2n) {
+  background: #f2f2f2;
+}
