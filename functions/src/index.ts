@@ -26,15 +26,17 @@ export const onToDoWrite = functions
   .firestore.document("users/{userId}/toDos/{toDoId}")
   .onWrite(async (change, context) => {
     const { userId } = context.params
+    const before = change.before.data()
+    const after = change.after.data()
 
-    if (!change.after) {
+    if (!after) {
       // ToDo was deleted -> Not needed to treat
       return undefined
     }
 
-    if (!change.before) {
+    if (!before) {
       // ToDo was added
-      const done = !!change.after.data()?.done
+      const done = !!after?.done
 
       await db.doc(`users/${userId}`).update({
         countDone: FieldValue.increment(done ? 1 : 0),
@@ -43,9 +45,9 @@ export const onToDoWrite = functions
 
       return undefined
     }
-    if (change.after && change.before) {
+    if (after && before) {
       // ToDo was changed
-      const done = !!change.after.data()?.done
+      const done = !!after?.done
       await db.doc(`users/${userId}`).update({
         countDone: FieldValue.increment(done ? 1 : -1),
       })
