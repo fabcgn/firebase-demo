@@ -75,6 +75,7 @@ const Admin: FunctionComponent = () => {
   const onFormSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
     createNewToDo(newToDo)
+    setNewToDo("")
   }
 
   if (!userId) return <LoginWithGoogleButton />
