@@ -12,18 +12,14 @@ interface User {
 const Public: FunctionComponent = () => {
   const [users, setUsers] = useState<User[]>([])
   useEffect(() => {
-    const unsubscribe = onSnapshot(
-      collection(db, "users"),
-      async (snapshot) => {
-        const docs = await snapshot.docs.map((doc) => ({
-          userName: doc.data().userName,
-          countDone: doc.data().countDone ?? 999,
-          countTotal: doc.data().countTotal ?? 999,
-        }))
-        console.log(docs)
-        setUsers(docs)
-      }
-    )
+    const unsubscribe = onSnapshot(collection(db, "users"), (snapshot) => {
+      const docs = snapshot.docs.map((doc) => ({
+        userName: doc.data().userName,
+        countDone: doc.data().countDone ?? 999,
+        countTotal: doc.data().countTotal ?? 999,
+      }))
+      setUsers(docs)
+    })
     return unsubscribe
   }, [])
 

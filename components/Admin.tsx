@@ -33,13 +33,6 @@ const Admin: FunctionComponent = () => {
     console.log("effecting")
     onAuthStateChanged(auth, (user) => {
       setUser(user)
-      if (user) {
-        setDoc(
-          doc(db, `users/${user.uid}`),
-          { userName: user.displayName },
-          { merge: true }
-        )
-      }
     })
   }, [auth])
 
