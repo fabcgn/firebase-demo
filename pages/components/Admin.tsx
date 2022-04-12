@@ -13,12 +13,12 @@ const Admin: FunctionComponent = () => {
   // TODO: Load all Todos from Firestore
   const toDos: Array<ToDo> = [
     { id: "123", done: true, name: "Setup Next App" },
-    { id: "123", done: true, name: "Create Component Styles" },
-    { id: "123", done: false, name: "Init Firebase in Project" },
+    { id: "123a", done: true, name: "Create Component Styles" },
+    { id: "123b", done: false, name: "Init Firebase in Project" },
     { id: "abc", done: false, name: "Connect Auth" },
     { id: "def", done: false, name: "Connect Firestore" },
-    { id: "dfg", done: false, name: "Create Firestore Rules" },
-    { id: "dfg", done: false, name: "Show open Tasks to Public" },
+    { id: "dfg1", done: false, name: "Create Firestore Rules" },
+    { id: "dfg2", done: false, name: "Show open Tasks to Public" },
   ]
 
   const toggleToDo = (id: string) => {
