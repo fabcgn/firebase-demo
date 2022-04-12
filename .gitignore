@@ -33,3 +33,14 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+## functions gitignore
+# Compiled JavaScript files
+/functions/lib/**/*.js
+/functions/lib/**/*.js.map
+
+# TypeScript v1 declaration files
+/functions/typings/
+
+# Node.js dependency directory
+/functions/node_modules/
